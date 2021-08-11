@@ -20,7 +20,7 @@ pub enum Class {
     CPlus,  // +
     CMinus, // -
     CPoint, // .
-    CZero , // 0
+    CZero,  // 0
     CDigit, // 123456789
     CLowA,  // a
     CLowB,  // b
@@ -44,25 +44,15 @@ pub enum Class {
 /// The remaining Unicode characters should be mapped to C_ETC.
 /// Non-whitespace control characters are errors.
 pub const ASCII_CLASS: [Class; 128] = [
-    ___,    ___,    ___,    ___,    ___,    ___,      ___,  ___,
-    ___,    CWhite, CWhite, ___,    ___,    CWhite,   ___,  ___,
-    ___,    ___,    ___,    ___,    ___,    ___,      ___,  ___,
-    ___,    ___,    ___,    ___,    ___,    ___,      ___,  ___,
-
-    CSpace, CEtc,   CQuote, CEtc,   CEtc,   CEtc,   CEtc,   CEtc,
-    CEtc,   CEtc,   CEtc,   CPlus,  CComma, CMinus, CPoint, CSlash,
-    CZero,  CDigit, CDigit, CDigit, CDigit, CDigit, CDigit, CDigit,
-    CDigit, CDigit, CColon, CEtc,   CEtc,   CEtc,   CEtc,   CEtc,
-
-    CEtc,   CAbcdf, CAbcdf, CAbcdf, CAbcdf, CE,     CAbcdf, CEtc,
-    CEtc,   CEtc,   CEtc,   CEtc,   CEtc,   CEtc,   CEtc,   CEtc,
-    CEtc,   CEtc,   CEtc,   CEtc,   CEtc,   CEtc,   CEtc,   CEtc,
-    CEtc,   CEtc,   CEtc,   CLsqrb, CBacks, CRsqrb, CEtc,   CEtc,
-
-    CEtc,   CLowA,  CLowB,  CLowC,  CLowD,  CLowE,  CLowF,  CEtc,
-    CEtc,   CEtc,   CEtc,   CEtc,   CLowL,  CEtc,   CLowN,  CEtc,
-    CEtc,   CEtc,   CLowR,  CLowS,  CLowT,  CLowU,  CEtc,   CEtc,
-    CEtc,   CEtc,   CEtc,   CLcurb, CEtc,   CRcurb, CEtc,   CEtc
+    ___, ___, ___, ___, ___, ___, ___, ___, ___, CWhite, CWhite, ___, ___, CWhite, ___, ___, ___,
+    ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, ___, CSpace, CEtc,
+    CQuote, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CPlus, CComma, CMinus, CPoint, CSlash,
+    CZero, CDigit, CDigit, CDigit, CDigit, CDigit, CDigit, CDigit, CDigit, CDigit, CColon, CEtc,
+    CEtc, CEtc, CEtc, CEtc, CEtc, CAbcdf, CAbcdf, CAbcdf, CAbcdf, CE, CAbcdf, CEtc, CEtc, CEtc,
+    CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc, CEtc,
+    CEtc, CLsqrb, CBacks, CRsqrb, CEtc, CEtc, CEtc, CLowA, CLowB, CLowC, CLowD, CLowE, CLowF, CEtc,
+    CEtc, CEtc, CEtc, CEtc, CLowL, CEtc, CLowN, CEtc, CEtc, CEtc, CLowR, CLowS, CLowT, CLowU, CEtc,
+    CEtc, CEtc, CEtc, CEtc, CLcurb, CEtc, CRcurb, CEtc, CEtc,
 ];
 
 /// The state codes.

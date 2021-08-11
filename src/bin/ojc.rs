@@ -1,5 +1,5 @@
-use std::io;
 use oxidized_json_checker::JsonChecker;
+use std::io;
 
 fn fmain() -> io::Result<()> {
     let stdin = io::stdin();

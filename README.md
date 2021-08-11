@@ -1,4 +1,6 @@
-# oxidized-json-checker
+# json-boat-validator
+
+This is a fork of [oxidized-json-checker](https://github.com/Kerollmops/oxidized-json-checker).
 
 This is a pure Rust version of [the JSON_checker library](http://www.json.org/JSON_checker/).
 

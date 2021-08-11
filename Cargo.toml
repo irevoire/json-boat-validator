@@ -1,12 +1,12 @@
 [package]
-name = "oxidized-json-checker"
-version = "0.3.2"
+name = "json-boat-validator"
+version = "1.0.0"
 description = "A pushdown automaton low memory JSON bytes stream checker"
-authors = ["Kerollmops <clement@meilisearch.com>"]
+authors = ["Bidoubiwa <charlottevermandel@gmail.com>", "tamo <irevoire@protonmail.ch>", "Kerollmops <clement@meilisearch.com>"]
 edition = "2018"
 license-file = "LICENSE"
-repository = "https://github.com/Kerollmops/oxidized-json-checker"
-homepage = "https://github.com/Kerollmops/oxidized-json-checker"
+repository = "https://github.com/irevoire/json-boat-validator"
+homepage = "https://github.com/irevoire/json-boat-validator"
 readme = "README.md"
 default-run = "ojc"
 
