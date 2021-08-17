@@ -11,26 +11,47 @@ fn parse(text: &str) -> io::Result<JsonType> {
 
 #[test]
 fn it_works() {
-    let json = r#"{"hello": "girls 😜 ❤️"}"#;
+    let json = r#"{"hello": "doggos 🐕 ❤️"}"#;
 
     let mut string = String::new();
     let mut checker = JsonChecker::new(json.as_bytes());
     checker.read_to_string(&mut string).unwrap();
-    checker.finish().unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
 
+    assert_eq!(json_type, JsonType::Object);
+    assert_eq!(start, 1);
+    assert_eq!(end, 31);
+    assert_eq!(&*string, json);
+}
+
+#[test]
+fn whitespace_it_works() {
+    let json = r#"       {"hello": "cattos 🐕 ❤️"}
+
+    "#;
+
+    let mut string = String::new();
+    let mut checker = JsonChecker::new(json.as_bytes());
+    checker.read_to_string(&mut string).unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
+
+    assert_eq!(json_type, JsonType::Object);
+    assert_eq!(start, 8);
+    assert_eq!(end, 43);
     assert_eq!(&*string, json);
 }
 
 #[test]
 fn it_does_not_work() {
-    let json = r#"{"hello": "boys}"#; // missing quote
+    let json = r#"{"hello": "spoddo 🕷️}"#; // missing quote
 
     let mut string = String::new();
     let mut checker = JsonChecker::new(json.as_bytes());
     checker.read_to_string(&mut string).unwrap();
 
     // This should fail
-    checker.finish().unwrap_err();
+    let err = checker.finish().unwrap_err();
+    assert_eq!(err, Error::IncompleteElement);
 
     assert_eq!(&*string, json);
 }

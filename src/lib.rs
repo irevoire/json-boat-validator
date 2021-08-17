@@ -92,7 +92,7 @@ mod internals;
 mod tests;
 
 /// The error type returned by the `JsonChecker` type.
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Error {
     InvalidCharacter,
     EmptyCurlyBraces,
