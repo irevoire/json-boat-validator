@@ -1,4 +1,4 @@
-//! `oxidized-json-checker` is a library that provides JSON validation without
+//! `turbo-json-checker` is a library that provides JSON validation without
 //! keeping the stream of bytes in memory, it streams the bytes and validate it
 //! on the fly using a pushdown automaton.
 //!
@@ -18,7 +18,7 @@
 //! let text = r#"["I", "am", "a", "valid", "JSON", "array"]"#;
 //! let bytes = text.as_bytes();
 //!
-//! oxidized_json_checker::validate(bytes)?;
+//! turbo_json_checker::validate(bytes)?;
 //! # Ok(()) }
 //! # fmain().unwrap()
 //! ```
@@ -36,7 +36,7 @@
 //! # fn fmain() -> Result<(), Box<dyn std::error::Error>> {
 //! let stream = streaming_from_the_web()?;
 //!
-//! oxidized_json_checker::validate(stream)?;
+//! turbo_json_checker::validate(stream)?;
 //! # Ok(()) }
 //! # fmain().unwrap()
 //! ```
@@ -52,7 +52,7 @@
 //! ```no_run
 //! # fn fmain() -> Result<(), Box<dyn std::error::Error>> {
 //! use std::io;
-//! use oxidized_json_checker::JsonChecker;
+//! use turbo_json_checker::JsonChecker;
 //!
 //! let stdin = io::stdin();
 //! let stdout = io::stdout();
@@ -141,7 +141,7 @@ pub enum JsonType {
 ///
 /// ```
 /// # fn fmain() -> Result<(), Box<dyn std::error::Error>> {
-/// use oxidized_json_checker::{validate, JsonType};
+/// use turbo_json_checker::{validate, JsonType};
 /// let text = r#""I am a simple string!""#;
 /// let bytes = text.as_bytes();
 ///
@@ -184,7 +184,7 @@ pub fn validate_bytes(bytes: &[u8]) -> Result<(JsonType, usize, usize), Error> {
 /// ```
 /// # fn fmain() -> Result<(), Box<dyn std::error::Error>> {
 /// use std::io;
-/// use oxidized_json_checker::JsonChecker;
+/// use turbo_json_checker::JsonChecker;
 ///
 /// let text = r#"{"I am": "an object"}"#;
 /// let bytes = text.as_bytes();
