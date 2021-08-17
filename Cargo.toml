@@ -1,7 +1,7 @@
 [package]
 name = "turbo-json-checker"
 version = "1.0.0"
-description = "A pushdown automaton low memory JSON bytes stream checker"
+description = "A pushdown automaton low memory JSON bytes stream checker returning the JSON root-type followed by its start and end position in the Reader"
 authors = ["Bidoubiwa <charlottevermandel@gmail.com>", "tamo <irevoire@protonmail.ch>", "Kerollmops <clement@meilisearch.com>"]
 edition = "2018"
 license-file = "LICENSE"
@@ -15,7 +15,7 @@ keywords = ["json", "streaming"]
 packed_simd = { version = "0.3.3", optional = true }
 
 [dev-dependencies]
-snap = "1.0.0" # for the lib.rs example
+snap = "1.0.0"
 
 [features]
 default = []
