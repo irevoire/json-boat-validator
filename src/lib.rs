@@ -2,11 +2,11 @@
 //! keeping the stream of bytes in memory, it streams the bytes and validate it
 //! on the fly using a pushdown automaton.
 //!
-//! The original library has been retrieved from [json.org](http://www.json.org/JSON_checker/)
-//! and improved to accept every valid JSON element has a valid JSOn document.
+//! It returns the root type of the json [(Array, Object, String,
+//! ...)](crate::JsonType), followed by the position of its first and last non whitespace character (ex: `(Array, 1, 12)`).
 //!
-//! Therefore this library accepts a single string or single integer as a valid JSON document,
-//! this way we follow the [`serde_json`](https://docs.rs/serde_json) rules.
+//! This library is a fork of [oxidized-json-checker](https://github.com/Kerollmops/oxidized-json-checker)
+//! which is itself an improvement of the [json.org](http://www.json.org/JSON_checker/) checker.
 //!
 //! # Example: validate some bytes
 //!
@@ -15,10 +15,17 @@
 //!
 //! ```
 //! # fn fmain() -> Result<(), Box<dyn std::error::Error>> {
+//! // position:  1                                        42
+//! //            |                                        |
+//! //            v                                        v
 //! let text = r#"["I", "am", "a", "valid", "JSON", "array"]"#;
 //! let bytes = text.as_bytes();
 //!
-//! turbo_json_checker::validate(bytes)?;
+//! let (json_type, start, end) = turbo_json_checker::validate(bytes)?;
+//!
+//! assert_eq!(json_type, turbo_json_checker::JsonType::Array);
+//! assert_eq!(start, 1);
+//! assert_eq!(end, 42);
 //! # Ok(()) }
 //! # fmain().unwrap()
 //! ```
