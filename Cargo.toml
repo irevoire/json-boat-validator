@@ -9,6 +9,7 @@ repository = "https://github.com/irevoire/turbo-json-checker"
 homepage = "https://github.com/irevoire/turbo-json-checker"
 readme = "README.md"
 default-run = "ojc"
+keywords = ["json", "streaming"]
 
 [dependencies]
 packed_simd = { version = "0.3.3", optional = true }
