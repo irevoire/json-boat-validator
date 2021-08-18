@@ -328,28 +328,27 @@ impl<R> JsonChecker<R> {
                     State::N1 => {
                         jc.outer_type = Some(JsonType::Null);
                         jc.start = Some(jc.idx);
-                    },
+                    }
                     State::T1 | State::F1 => {
                         jc.outer_type = Some(JsonType::Bool);
                         jc.start = Some(jc.idx);
-
                     }
                     State::In => {
                         jc.outer_type = Some(JsonType::Number);
                         jc.start = Some(jc.idx);
-                    },
+                    }
                     State::Wq => {
                         jc.outer_type = Some(JsonType::String);
                         jc.start = Some(jc.idx);
-                    },
+                    }
                     State::Wos => {
                         jc.outer_type = Some(JsonType::Array);
                         jc.start = Some(jc.idx);
-                    },
+                    }
                     State::Woc => {
                         jc.outer_type = Some(JsonType::Object);
                         jc.start = Some(jc.idx);
-                    },
+                    }
                     _ => (),
                 }
             }
@@ -359,162 +358,149 @@ impl<R> JsonChecker<R> {
                     // Empty }
                     if !jc.pop(Mode::Key) {
                         return Err(Error::EmptyCurlyBraces);
-                    } else if jc.stack.len() == 1 {
-                        jc.end = Some(jc.idx);
                     }
-                jc.state = State::Ok;
-            }
-            State::Wcu => {
-                // }
-                if !jc.pop(Mode::Object) {
-                    return Err(Error::OrphanCurlyBrace);
-                } else if jc.stack.len() == 1 {
-                    jc.end = Some(jc.idx);
-                }
-            jc.state = State::Ok;
-        }
-        State::Ws => {
-            // ]
-            if !jc.pop(Mode::Array) {
-                return Err(Error::OrphanSquareBrace);
-            } else if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx);
-            }
-            jc.state = State::Ok;
-        }
-        State::Woc => {
-            // {
-            if !jc.push(Mode::Key) {
-                return Err(Error::MaxDepthReached);
-            } else if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx);
-            }
-            jc.state = State::Ob;
-        }
-        State::Wos => {
-            // [
-            if !jc.push(Mode::Array) {
-                return Err(Error::MaxDepthReached);
-            } else if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx);
-            }
-            jc.state = State::Ar;
-        }
-        State::Wq => {
-            // "
-            match jc.stack.last() {
-                Some(Mode::Done) => {
-                    if !jc.push(Mode::String) {
-                        return Err(Error::MaxDepthReached);
-                    }
-                    jc.state = State::St;
-                }
-                Some(Mode::String) => {
-                    jc.pop(Mode::String);
                     jc.state = State::Ok;
                 }
-                Some(Mode::Key) => jc.state = State::Co,
-                Some(Mode::Array) | Some(Mode::Object) => jc.state = State::Ok,
-                _ => return Err(Error::InvalidQuote),
-            }
-            if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx);
-            }
-        }
-        State::Wcm => {
-            // ,
-            match jc.stack.last() {
-                Some(Mode::Object) => {
-                    // A comma causes a flip from object mode to key mode.
-                    if !jc.pop(Mode::Object) || !jc.push(Mode::Key) {
-                        return Err(Error::InvalidComma);
+                State::Wcu => {
+                    // }
+                    if !jc.pop(Mode::Object) {
+                        return Err(Error::OrphanCurlyBrace);
                     }
-                    jc.state = State::Ke;
+                    jc.state = State::Ok;
                 }
-                Some(Mode::Array) => jc.state = State::Va,
-                _ => return Err(Error::InvalidComma),
-            }
-            if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx);
-            }
-        }
-        State::Wcl => {
-            // :
-            // A colon causes a flip from key mode to object mode.
-            if !jc.pop(Mode::Key) || !jc.push(Mode::Object) {
-                return Err(Error::InvalidColon);
-            } else if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx);
-            }
-            jc.state = State::Va;
-        }
-        State::Invalid => return Err(Error::InvalidState),
+                State::Ws => {
+                    // ]
+                    if !jc.pop(Mode::Array) {
+                        return Err(Error::OrphanSquareBrace);
+                    }
+                    jc.state = State::Ok;
+                }
+                State::Woc => {
+                    // {
+                    if !jc.push(Mode::Key) {
+                        return Err(Error::MaxDepthReached);
+                    }
+                    jc.state = State::Ob;
+                }
+                State::Wos => {
+                    // [
+                    if !jc.push(Mode::Array) {
+                        return Err(Error::MaxDepthReached);
+                    }
+                    jc.state = State::Ar;
+                }
+                State::Wq => {
+                    // "
+                    match jc.stack.last() {
+                        Some(Mode::Done) => {
+                            if !jc.push(Mode::String) {
+                                return Err(Error::MaxDepthReached);
+                            }
+                            jc.state = State::St;
+                        }
+                        Some(Mode::String) => {
+                            jc.pop(Mode::String);
+                            jc.state = State::Ok;
+                        }
+                        Some(Mode::Key) => jc.state = State::Co,
+                        Some(Mode::Array) | Some(Mode::Object) => jc.state = State::Ok,
+                        _ => return Err(Error::InvalidQuote),
+                    }
+                }
+                State::Wcm => {
+                    // ,
+                    match jc.stack.last() {
+                        Some(Mode::Object) => {
+                            // A comma causes a flip from object mode to key mode.
+                            if !jc.pop(Mode::Object) || !jc.push(Mode::Key) {
+                                return Err(Error::InvalidComma);
+                            }
+                            jc.state = State::Ke;
+                        }
+                        Some(Mode::Array) => jc.state = State::Va,
+                        _ => return Err(Error::InvalidComma),
+                    }
+                }
+                State::Wcl => {
+                    // :
+                    // A colon causes a flip from key mode to object mode.
+                    if !jc.pop(Mode::Key) || !jc.push(Mode::Object) {
+                        return Err(Error::InvalidColon);
+                    }
+                    jc.state = State::Va;
+                }
+                State::Invalid => return Err(Error::InvalidState),
 
-        // Or change the state.
-        state => {
-            jc.state = state;
-            if jc.stack.len() == 1 {
-                jc.end = Some(jc.idx - 1);
+                // Or change the state.
+                state => {
+                    jc.state = state;
+                    if jc.end.is_none() && state == State::Ok {
+                        jc.end = Some(jc.idx);
+                    }
+                }
             }
-        },
+
+            Ok(())
+        }
+
+        // By catching returned errors when this `JsonChecker` is used we *fuse*
+        // the checker and ensure the user don't use a checker in an invalid state.
+        if let Err(error) = internal_next_byte(self, next_byte) {
+            self.error = Some(error);
+            return Err(error);
         }
 
         Ok(())
     }
 
-    // By catching returned errors when this `JsonChecker` is used we *fuse*
-    // the checker and ensure the user don't use a checker in an invalid state.
-    if let Err(error) = internal_next_byte(self, next_byte) {
-        self.error = Some(error);
-        return Err(error);
+    /// The `JsonChecker::finish` method must be called after all of the characters
+    /// have been processed.
+    ///
+    /// This function consumes the `JsonChecker` and returns `Ok(JsonType)` if the
+    /// JSON text was accepted and the JSON type guessed.
+    pub fn finish(self) -> Result<(JsonType, usize, usize), Error> {
+        self.into_inner().map(|(_, t, start, end)| (t, start, end))
     }
 
-    Ok(())
-}
+    /// The `JsonChecker::into_inner` does the same as the `JsonChecker::finish`
+    /// method but returns the internal reader along with the JSON type guessed.
+    pub fn into_inner(mut self) -> Result<(R, JsonType, usize, usize), Error> {
+        let is_state_valid = match self.state {
+            State::Ok | State::In | State::Fr | State::Fs | State::E3 => true,
+            _ => false,
+        };
 
-/// The `JsonChecker::finish` method must be called after all of the characters
-/// have been processed.
-///
-/// This function consumes the `JsonChecker` and returns `Ok(JsonType)` if the
-/// JSON text was accepted and the JSON type guessed.
-pub fn finish(self) -> Result<(JsonType, usize, usize), Error> {
-    self.into_inner().map(|(_, t, start, end)| (t, start, end))
-}
+        if is_state_valid && self.pop(Mode::Done) {
+            let outer_type = self
+                .outer_type
+                .expect("BUG: the outer type must have been guessed");
+            return Ok((
+                self.reader,
+                outer_type,
+                self.start.unwrap(),
+                self.end.unwrap_or(self.idx),
+            ));
+        }
 
-/// The `JsonChecker::into_inner` does the same as the `JsonChecker::finish`
-/// method but returns the internal reader along with the JSON type guessed.
-pub fn into_inner(mut self) -> Result<(R, JsonType, usize, usize), Error> {
-    let is_state_valid = match self.state {
-        State::Ok | State::In | State::Fr | State::Fs | State::E3 => true,
-        _ => false,
-    };
-
-    if is_state_valid && self.pop(Mode::Done) {
-        let outer_type = self
-            .outer_type
-            .expect("BUG: the outer type must have been guessed");
-        return Ok((self.reader, outer_type, self.start.unwrap(), self.end.unwrap()));
+        // We do not need to catch this error to *fuse* the checker because this method
+        // consumes the checker, it cannot be reused after an error has been thrown.
+        Err(Error::IncompleteElement)
     }
 
-    // We do not need to catch this error to *fuse* the checker because this method
-    // consumes the checker, it cannot be reused after an error has been thrown.
-    Err(Error::IncompleteElement)
-}
-
-/// Push a mode onto the stack. Returns false if max depth is reached.
-fn push(&mut self, mode: Mode) -> bool {
-    if self.stack.len() + 1 >= self.max_depth {
-        return false;
+    /// Push a mode onto the stack. Returns false if max depth is reached.
+    fn push(&mut self, mode: Mode) -> bool {
+        if self.stack.len() + 1 >= self.max_depth {
+            return false;
+        }
+        self.stack.push(mode);
+        return true;
     }
-    self.stack.push(mode);
-    return true;
-}
 
-/// Pop the stack, assuring that the current mode matches the expectation.
-/// Return false if the stack is empty or if the modes mismatch.
-fn pop(&mut self, mode: Mode) -> bool {
-    self.stack.pop() == Some(mode)
-}
+    /// Pop the stack, assuring that the current mode matches the expectation.
+    /// Return false if the stack is empty or if the modes mismatch.
+    fn pop(&mut self, mode: Mode) -> bool {
+        self.stack.pop() == Some(mode)
+    }
 }
 
 impl<R: io::Read> io::Read for JsonChecker<R> {
