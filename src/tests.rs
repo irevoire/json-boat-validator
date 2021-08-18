@@ -10,7 +10,7 @@ fn parse(text: &str) -> io::Result<JsonType> {
 }
 
 #[test]
-fn it_works() {
+fn simple_object() {
     let json = r#"{"hello": "doggos 🐕 ❤️"}"#;
 
     let mut string = String::new();
@@ -19,13 +19,76 @@ fn it_works() {
     let (json_type, start, end) = checker.finish().unwrap();
 
     assert_eq!(json_type, JsonType::Object);
-    assert_eq!(start, 1);
-    assert_eq!(end, 31);
+    assert_eq!(start, 0);
+    assert_eq!(end, 30);
     assert_eq!(&*string, json);
 }
 
 #[test]
-fn whitespace_it_works() {
+fn empty_array() {
+    let json = r#"[]"#;
+
+    let mut string = String::new();
+    let mut checker = JsonChecker::new(json.as_bytes());
+    checker.read_to_string(&mut string).unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
+
+    assert_eq!(json_type, JsonType::Array);
+    assert_eq!(start, 0);
+    assert_eq!(end, 1);
+    assert_eq!(&*string, json);
+}
+
+#[test]
+fn prepend_whitespace_empty_array() {
+    let json = r#"  []"#;
+
+    let mut string = String::new();
+    let mut checker = JsonChecker::new(json.as_bytes());
+    checker.read_to_string(&mut string).unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
+
+    assert_eq!(json_type, JsonType::Array);
+    assert_eq!(start, 2);
+    assert_eq!(end, 3);
+    assert_eq!(&*string, json);
+}
+
+#[test]
+fn prepend_and_trailing_whitespace_empty_array() {
+    let json = r#"  []  "#;
+
+    let mut string = String::new();
+    let mut checker = JsonChecker::new(json.as_bytes());
+    checker.read_to_string(&mut string).unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
+
+    assert_eq!(json_type, JsonType::Array);
+    assert_eq!(start, 2);
+    assert_eq!(end, 3);
+    assert_eq!(&*string, json);
+}
+
+#[test]
+fn trailing_whitespace() {
+    let json = r#"{"hello": "doggos 🐕 ❤️"}   
+    
+    
+    "#;
+
+    let mut string = String::new();
+    let mut checker = JsonChecker::new(json.as_bytes());
+    checker.read_to_string(&mut string).unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
+
+    assert_eq!(json_type, JsonType::Object);
+    assert_eq!(start, 0);
+    assert_eq!(end, 30);
+    assert_eq!(&*string, json);
+}
+
+#[test]
+fn whitespace() {
     let json = r#"       {"hello": "cattos 🐕 ❤️"}
 
     "#;
@@ -36,8 +99,8 @@ fn whitespace_it_works() {
     let (json_type, start, end) = checker.finish().unwrap();
 
     assert_eq!(json_type, JsonType::Object);
-    assert_eq!(start, 8);
-    assert_eq!(end, 39);
+    assert_eq!(start, 7);
+    assert_eq!(end, 37);
     assert_eq!(&*string, json);
 }
 
