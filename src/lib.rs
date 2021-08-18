@@ -3,7 +3,7 @@
 //! on the fly using a pushdown automaton.
 //!
 //! It returns the root type of the json [(Array, Object, String,
-//! ...)](crate::JsonType), followed by the position of its first and last non whitespace character (ex: `(Array, 1, 12)`).
+//! ...)](crate::JsonType), followed by the index of its first and last non whitespace character (ex: `(Array, 1, 12)`).
 //!
 //! This library is a fork of [oxidized-json-checker](https://github.com/Kerollmops/oxidized-json-checker)
 //! which is itself an improvement of the [json.org](http://www.json.org/JSON_checker/) checker.
@@ -15,7 +15,7 @@
 //!
 //! ```
 //! # fn fmain() -> Result<(), Box<dyn std::error::Error>> {
-//! // position:  1                                        42
+//! // index:     0                                        41
 //! //            |                                        |
 //! //            v                                        v
 //! let text = r#"["I", "am", "a", "valid", "JSON", "array"]"#;
@@ -24,8 +24,8 @@
 //! let (json_type, start, end) = turbo_json_checker::validate(bytes)?;
 //!
 //! assert_eq!(json_type, turbo_json_checker::JsonType::Array);
-//! assert_eq!(start, 1);
-//! assert_eq!(end, 42);
+//! assert_eq!(start, 0);
+//! assert_eq!(end, 41);
 //! # Ok(()) }
 //! # fmain().unwrap()
 //! ```
@@ -153,7 +153,7 @@ pub enum JsonType {
 /// let bytes = text.as_bytes();
 ///
 /// let json_type = validate(bytes)?;
-/// assert_eq!(json_type, (JsonType::String, 1, text.len()));
+/// assert_eq!(json_type, (JsonType::String, 0, text.len() - 1));
 /// # Ok(()) }
 /// # fmain().unwrap()
 /// ```
@@ -435,7 +435,7 @@ impl<R> JsonChecker<R> {
                 state => {
                     jc.state = state;
                     if jc.end.is_none() && state == State::Ok {
-                        jc.end = Some(jc.idx);
+                        jc.end = Some(jc.idx - 1); // If in state `OK` last state has already been poped. We must go back one char to be on the last character of the previous State.
                     }
                 }
             }
@@ -477,8 +477,8 @@ impl<R> JsonChecker<R> {
             return Ok((
                 self.reader,
                 outer_type,
-                self.start.unwrap(),
-                self.end.unwrap_or(self.idx),
+                self.start.unwrap() - 1,
+                self.end.unwrap_or(self.idx) - 1,
             ));
         }
 
