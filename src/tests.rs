@@ -37,7 +37,7 @@ fn whitespace_it_works() {
 
     assert_eq!(json_type, JsonType::Object);
     assert_eq!(start, 8);
-    assert_eq!(end, 43);
+    assert_eq!(end, 39);
     assert_eq!(&*string, json);
 }
 
