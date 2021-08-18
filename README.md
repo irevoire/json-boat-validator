@@ -1,4 +1,4 @@
-# json-boat-validator
+# turbo-json-checker
 
 This is a fork of [oxidized-json-checker](https://github.com/Kerollmops/oxidized-json-checker) that returns the json type and the json starting and ending index in the Reader.
 
