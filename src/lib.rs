@@ -474,7 +474,6 @@ impl<R> JsonChecker<R> {
             let outer_type = self
                 .outer_type
                 .expect("BUG: the outer type must have been guessed");
-            dbg!(self.end);
             return Ok((
                 self.reader,
                 outer_type,
