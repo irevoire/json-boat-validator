@@ -1,6 +1,6 @@
 [package]
 name = "turbo-json-checker"
-version = "1.0.0"
+version = "1.0.1"
 description = "A pushdown automaton low memory JSON bytes stream checker returning the JSON root-type followed by its start and end position in the Reader"
 authors = ["Bidoubiwa <charlottevermandel@gmail.com>", "tamo <irevoire@protonmail.ch>", "Kerollmops <clement@meilisearch.com>"]
 edition = "2018"
