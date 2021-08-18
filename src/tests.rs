@@ -105,7 +105,22 @@ fn whitespace() {
 }
 
 #[test]
-fn it_does_not_work() {
+fn empty_object_in_empty_array() {
+    let json = r#"[{}]"#;
+
+    let mut string = String::new();
+    let mut checker = JsonChecker::new(json.as_bytes());
+    checker.read_to_string(&mut string).unwrap();
+    let (json_type, start, end) = checker.finish().unwrap();
+
+    assert_eq!(json_type, JsonType::Array);
+    assert_eq!(start, 0);
+    assert_eq!(end, 3);
+    assert_eq!(&*string, json);
+}
+
+#[test]
+fn wrong_json_format() {
     let json = r#"{"hello": "spoddo 🕷️}"#; // missing quote
 
     let mut string = String::new();

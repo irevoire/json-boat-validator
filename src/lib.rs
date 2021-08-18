@@ -434,7 +434,7 @@ impl<R> JsonChecker<R> {
                 // Or change the state.
                 state => {
                     jc.state = state;
-                    if jc.end.is_none() && state == State::Ok {
+                    if jc.stack.len() == 1 && jc.end.is_none() && state == State::Ok {
                         jc.end = Some(jc.idx - 1); // If in state `OK` last state has already been poped. We must go back one char to be on the last character of the previous State.
                     }
                 }
@@ -474,6 +474,7 @@ impl<R> JsonChecker<R> {
             let outer_type = self
                 .outer_type
                 .expect("BUG: the outer type must have been guessed");
+            dbg!(self.end);
             return Ok((
                 self.reader,
                 outer_type,
